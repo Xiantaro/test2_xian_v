@@ -231,8 +231,8 @@ BEGIN
 		END
 
         SET @message = N'【預約成功通知】親愛的 ' + @cName +
-                       N' ，您已於'  + CONVERT(NVARCHAR ,FORMAT(GETDATE(), 'yyyy-MM-dd hh-mm-ss'))+ N'預約了 ['+ @title + 
-                       N'] 請耐心等候通知。圖書館管理系統 敬上。';
+                       N' ，您已於'  + CONVERT(NVARCHAR ,FORMAT(GETDATE(), 'yyyy-MM-dd hh-mm-ss'))+ N'預約了 '+ @title + 
+                       N' 請耐心等候通知。圖書館管理系統 敬上。';
 
         INSERT INTO Notification (cid, [message], notificationDate) VALUES (@cid,  @message, GETDATE());
 		
@@ -359,8 +359,8 @@ BEGIN
 		END
 
         SET @message = N'【取書通知】親愛的 ' + @cName +
-                       N' ，您所預約的書 [' + @title + 
-                       N'] 已可以借閱，請於' + CONVERT(NVARCHAR, DATEADD(DAY, 2, GETDATE()), 111)+'內到本館借書，謝謝。圖書館管理系統 敬上。';
+                       N' ，您所預約的書 ' + @title + 
+                       N' 已可以借閱，請於' + CONVERT(NVARCHAR, DATEADD(DAY, 2, GETDATE()), 111)+'內到本館借書，謝謝。圖書館管理系統 敬上。';
         INSERT INTO Notification (cid, [message], notificationDate) VALUES (@cid,  @message, GETDATE());
     END TRY
     BEGIN CATCH
@@ -506,9 +506,9 @@ BEGIN
 	SELECT
 		Cid,
 		N'【即將逾期通知】親愛的 ' + ClientName +
-		N' ，您所借閱的 [' + Title +
-		N'] 將於 { ' + CONVERT(NVARCHAR, DueDays, 111) +
-		N' } 逾期，距離還書期限僅剩' + CONVERT(NVARCHAR, Days) +
+		N' ，您所借閱的 ' + Title +
+		N' 將於 ' + CONVERT(NVARCHAR, DueDays, 111) +
+		N' 逾期，距離還書期限僅剩' + CONVERT(NVARCHAR, Days) +
 		N' 天。請儘速歸還。圖書館管理系統 敬上。',
 		GETDATE()
 	FROM @OverDue od
@@ -529,7 +529,7 @@ BEGIN
 				od.cid,
 				N'【預約取消通知】親愛的 ' + cli.cName +
                        N' ，您所預約的 【' + col.title + 
-                       N'】 未於 { ' + CONVERT(NVARCHAR, DATEADD(DAY, -1, GETDATE()), 111) +' } 前取書，系統已取消，如有需要請重新預約，謝謝!!',
+                       N'】 未於 ' + CONVERT(NVARCHAR, DATEADD(DAY, -1, GETDATE()), 111) +' 前取書，系統已取消，如有需要請重新預約，謝謝!!',
 				GETDATE()
 		FROM @OverDue od
 		JOIN Client cli ON od.cid = cli.cid 
@@ -727,8 +727,8 @@ BEGIN
 		SELECT
 				od.cid,
 				N'【逾期警告通知】親愛的 ' + cli.cName +
-                       N' ，您所借閱的 [' + col.title + 
-                       N'] 未於 { ' + CONVERT(NVARCHAR, od.dueDateB, 111) + N' } 前還書，請盡速還書。',
+                       N' ，您所借閱的 ' + col.title + 
+                       N' 未於 ' + CONVERT(NVARCHAR, od.dueDateB, 111) + N' 前還書，請盡速還書。',
 				GETDATE()
 		FROM @OverDue od
 		JOIN Client cli ON od.cid = cli.cid 

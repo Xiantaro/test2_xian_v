@@ -11,11 +11,15 @@ public partial class Client
 
     public string CAccount { get; set; } = null!;
 
-    public string CPassword { get; set; } = null!;
+    public string? CPassword { get; set; }
 
-    public string CPhone { get; set; } = null!;
+    public string? CPhone { get; set; }
 
     public int Permission { get; set; }
+
+    public string? FacebookId { get; set; }
+
+    public string? GoogleId { get; set; }
 
     public virtual ICollection<Borrow> Borrows { get; set; } = new List<Borrow>();
 
