@@ -89,30 +89,4 @@ public class AccountController : Controller
         TempData["LoginSuccessMessage"] = $"您已成功使用 {providerName} 登入！歡迎 {name}。";
         return RedirectToAction("Index", "Home", new { Area = "Frontend" });
     }
-
-    /// <summary>
-    /// 登出功能
-    /// </summary>
-    /// <returns></returns>
-    [HttpPost]
-    [ValidateAntiForgeryToken] // 加上防偽造標記，避免 CSRF 攻擊
-    public async Task<IActionResult> Logout()
-    {
-        // 清除所有驗證 Cookie，讓使用者登出
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-        // 登出後導向到首頁或登入頁面
-        return RedirectToAction("LoginC", "Access", new { Area = "Frontend" });
-    }
-
-    /// <summary>
-    /// 範例：顯示登入使用者資訊的頁面 (如果有需要的話)
-    /// </summary>
-    [HttpGet]
-    [Microsoft.AspNetCore.Authorization.Authorize] // 只有登入後才能訪問
-    public IActionResult Profile()
-    {
-        // 如果使用者已登入，這裡的 User 物件會有他們的 Claims
-        return View(); // 可以顯示使用者名稱、電子郵件等資訊
-    }
 }

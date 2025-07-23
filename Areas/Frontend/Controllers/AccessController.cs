@@ -1,6 +1,7 @@
 ﻿using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -61,6 +62,44 @@ namespace test2.Areas.Frontend.Controllers
 
                 return RedirectToAction("Index", "Home", new { area = "Frontend" });
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AccessCardE(string provider, string userId)
+        {
+            var redirectUrl = Url.Action("LoginE", "Access", new { Area = "Frontend" });
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+
+            properties.Items["provider"] = provider;
+            properties.Items["userId"] = userId;
+
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LoginE()
+        {
+            var authentication = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
+
+            if (!authentication.Succeeded) { return RedirectToAction("Client", "Home", new { Area = "Frontend" }); }
+
+            var externalClaim = authentication.Principal.Claims;
+            var externalId = externalClaim.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            authentication.Properties.Items.TryGetValue("provider", out var provider);
+            authentication.Properties.Items.TryGetValue("userId", out var userId);
+
+            var userIdX = await _context.Clients.FindAsync(userId);
+
+            if (provider == "Facebook") { userIdX!.FacebookId = externalId; }
+            else { userIdX!.GoogleId = externalId; }
+
+            await _context.SaveChangesAsync();
+
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            return RedirectToAction("Client");
         }
 
         [HttpGet]
