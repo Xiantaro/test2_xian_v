@@ -45,7 +45,7 @@ let appointmentDate;
 
 // 重新選擇
 function CancelNotificationChange() {
-    let cancelAppointmentText = `【取消預約通知】\n親愛的用戶您好，\n您於 {${appointmentDate}}\n所預約的書籍《 ${booktitle} 》\n已於 {${new Date().toLocaleString('zh-TW')}} 由本館管理員取消。\n取消原因： OOXX ，若您仍有借閱需求，歡迎重新進行預約。\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。`
+    let cancelAppointmentText = `【取消預約通知】\n親愛的用戶您好，\n您所預約的書籍《 ${booktitle} 》\n已於 ${new Date().toLocaleString('zh-TW')} 由本館管理員取消。\n取消原因： 考零分 。若您仍有借閱需求，歡迎重新進行預約。\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。`
     $("#NotificationTextarea").val(cancelAppointmentText);
 }
 
@@ -522,6 +522,7 @@ function BookImgResetBtn() {
 }
 // 圖片變更BTN
 function BooksAdded_ShowImg2() {
+    console.log("變變");
     let thisRow = $(this).closest("tr");
     if (this.files && this.files[0]) {
         var reader = new FileReader();
@@ -803,7 +804,7 @@ function NotificationBtn() {
 // 預設通知內容
 function ChageNotificationType() {
     let NotificationType = $("#NotificationType").val();
-    let UpcomingExpirationNoticeText = `親愛的用戶您好，\n您所借閱的書籍《${TempBookName}》\n即將於 { ${DueDate} } 到期 \n 請您於期限前歸還，謝謝。\n圖書館管理系統 敬上。`;
+    let UpcomingExpirationNoticeText = `親愛的用戶您好，\n您所借閱的書籍《${TempBookName}》\n即將於  ${DueDate}  到期 \n 請您於期限前歸還，謝謝。\n圖書館管理系統 敬上。`;
     let ExpirationNoticeWarningText = `親愛的用戶您好，\n您所借閱的書籍《${TempBookName}》已逾期\n請儘速歸還並聯繫館方補辦相關事宜，謝謝您的配合。\n圖書館管理系統 敬上。`;
     if (NotificationType === "即將到期通知") { $("#NotificationTextarea").val(UpcomingExpirationNoticeText); }
     if (NotificationType === "逾期警告通知") { $("#NotificationTextarea").val(ExpirationNoticeWarningText); }
