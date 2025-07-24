@@ -60,14 +60,15 @@ namespace test2.Models.ManagementModels.Services
             await _context.Set<MessageDTO>().FromSqlRaw($"EXEC NotificationAboutToExpireToEmail @users", param).ToListAsync();
             foreach (var user in users)
             {
-                Debug.WriteLine($"借閱者: {user.cName} _ 書籍 {user.Title} _ 歸還日期: {user.DueDays} _ 信箱: {user.Email}");
+                Debug.WriteLine($"借閱者: {user.cName} _ 書籍 {user.Title} _ 歸還日期: {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} _ 信箱: {user.Email}");
             }
+            //string myEmail = "ns45665412@gmail.com";
             // Email通知
             //foreach (var user in users)
             //{
             //    string subject = "林間書語【即將逾期通知】";
-            //    string body = $"親愛的 {user.ClientName} ，您所借閱的  {user.Title} \r\n 將於 {user.DueDays} 逾期，距離還書期限僅剩 {user.Days} 天。\r\n圖書館管理系統 敬上。";
-            //    await EmailSenders.SendAsync(user.Email!, subject, body);
+            //    string body = $"親愛的 {user.cName}，您所借閱的  {user.Title} \r\n 將於 {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} 逾期，距離還書期限僅剩 {user.Days} 天。\r\n圖書館管理系統 敬上。";
+            //    await EmailSenders.SendAsync(myEmail, subject, body);
             //}
 
             // 以下可以測試用OK

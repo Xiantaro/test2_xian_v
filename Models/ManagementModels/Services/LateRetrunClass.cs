@@ -14,6 +14,7 @@ namespace test2.Models.ManagementModels.Services
             _context = context;
         }
         EmailSender EmailSenders = new EmailSender();
+        string myEmail = "ns45665412@gmail.com";
         public async Task<MessageDTO> LateRetrunStart()
         {
             Debug.WriteLine("開始進行逾期還書檢查.....");

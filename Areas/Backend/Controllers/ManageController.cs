@@ -302,6 +302,8 @@ namespace test2.Areas.Backend.Controllers
             var deleteBookCode = await _context.Books.Where(x => x.BookCode == bookCodeid).ToListAsync();
             var bookcode = await _context.Borrows.Include(x => x.Reservation).Where(x => x.BookId == deleteBookCode[0].BookId).ToListAsync();
             if (bookcode.Count() != 0) { return new MessageDTO() { ResultCode = 0, Message = $"{bookCodeid}已有紀錄無法刪除" }; }
+            var collectionCount = await _context.Books.Where(x => x.CollectionId == deleteBookCode[0].CollectionId).ToListAsync();
+            if (collectionCount.Count() == 1) { return new MessageDTO() { ResultCode = 0, Message = $"只剩一本無法刪除" }; }
             try
             {
                 _context.Books.Remove(deleteBookCode![0]);

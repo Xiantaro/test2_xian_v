@@ -1,11 +1,12 @@
-﻿using System.Data;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.CompilerServices;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Org.BouncyCastle.Tls;
+using System.Data;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using test2.Models.ManagementModels.GmailSMTP;
 using test2.Models.ManagementModels.ZhongXian.Normal;
 
@@ -22,6 +23,7 @@ namespace test2.Models.ManagementModels.Services
         NotificationUserDTO DueUser = new NotificationUserDTO();
         public async Task<MessageDTO> OverdueStart()
         {
+            string myEmail = "ns45665412@gmail.com";
             Debug.WriteLine("開始進行取書逾期檢查.....");
             // 1. 
             var OverdueResult = await _context.Set<OverDueDTO>().FromSqlInterpolated($"EXEC OverDue").ToListAsync();
@@ -30,6 +32,12 @@ namespace test2.Models.ManagementModels.Services
             foreach (var x in OverdueResult)
             {
                 Debug.WriteLine($"取書逾期者:{x.cName} _ 書名: {x.title} _ 信箱 : {x.cAccount}");
+                if (x.cName == "葉大雄")
+                {
+                    string subject = "【取書逾期通知】";
+                    string body = $"親愛的 {x.cName} \r\n您所預約的 【{x.title}】 \r\n未於 {x.dueDateB!.Value.ToString("yyyy-MM-dd")} 前取書，\r\n系統已取消，如有需要請重新預約，謝謝。\r\n圖書館管理系統 敬上。";
+                    await EmailSenders.SendAsync(myEmail, subject, body);
+                }
             }
             // 1.1 Email 取書逾期者通知 
             //foreach (var user in OverdueResult)
@@ -62,6 +70,12 @@ namespace test2.Models.ManagementModels.Services
             foreach (var x in CheckReservation)
             {
                 Debug.WriteLine($"下一位預約者: {x.cName} _ 書名: {x.title} _ 信箱 : {x.cAccount}");
+                if (x.cName == "兩津勘吉")
+                {
+                    string subject2 = "【取書通知】";
+                    string body2 = $"親愛的 {x.cName} \r\n，您所預約的書 【{x.title}】\r\n已可以借閱，請於{DateTime.Now.Date.AddDays(2).ToString("yyyy-MM-dd")}天內到本館借書。\r\n圖書館管理系統 敬上。";
+                    await EmailSenders.SendAsync(myEmail, subject2, body2);
+                }
             }
             // Email通知
             //foreach (var user in CheckReservation)

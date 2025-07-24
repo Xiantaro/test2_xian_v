@@ -32,15 +32,15 @@ namespace test2.Models.ManagementModels.Services
 
                 // 需要再啟用++++++++++++++++++++++++++++
                 // 借閱逾期 更改狀態、Email+站內通知 OKKKKKKKKKKKKKKKK
-                LateRetrunClass LateRetrunClasss = new LateRetrunClass(context);
-                var LateReturnResult = await LateRetrunClasss.LateRetrunStart();
-                Debug.WriteLine(LateReturnResult);
+                //LateRetrunClass LateRetrunClasss = new LateRetrunClass(context);
+                //var LateReturnResult = await LateRetrunClasss.LateRetrunStart();
+                //Debug.WriteLine(LateReturnResult);
 
                 // 需要再啟用++++++++++++++++++++++++++++
                 //即將逾期前一天、前三天 Email+站內通知 OKKKKKKKK
-                LateReturnOneToThreeClass LateReturnBefore = new LateReturnOneToThreeClass(context);
-                var LateReturn2 = await LateReturnBefore.LateReturnStartOnToThree();
-                Debug.WriteLine(LateReturn2);
+                //LateReturnOneToThreeClass LateReturnBefore = new LateReturnOneToThreeClass(context);
+                //var LateReturn2 = await LateReturnBefore.LateReturnStartOnToThree();
+                //Debug.WriteLine(LateReturn2);
 
                 Debug.WriteLine("排程結束.........");
             }
