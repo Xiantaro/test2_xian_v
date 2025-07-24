@@ -7,6 +7,7 @@ using System.Security.Claims;
 using test2.Controllers;
 using test2.Models;
 using test2.Models.ManagementModels.GmailSMTP;
+using test2.Models.ManagementModels.Services;
 using test2.Models.ManagementModels.ZhongXian.Appoimtment;
 using test2.Models.ManagementModels.ZhongXian.AppoimtmentQuery;
 using test2.Models.ManagementModels.ZhongXian.BookQuery;
@@ -69,16 +70,16 @@ namespace test2.Areas.Backend.Controllers
             await _context.SaveChangesAsync();
 
             //Email發送郵件 取得信箱、名字、書本
-            //var user = await _context.Reservations.Include(x => x.CIdNavigation).Include(x => x.Collection).Where(x => x.CIdNavigation.CId == NotificationUser).Select(result => new ReturnDTO
-            //{
-            //    cName = result.CIdNavigation.CName,
-            //    cAccount = result.CIdNavigation.CAccount,
-            //    Title = result.Collection.Title
-            //}).ToListAsync();
-            // string email ="你的Email";
-            //string subject = "【取消預約通知】";
-            //string body = $"親愛的{user[0].cName}您好，您於\r\n所預約的書籍《 {user[0].Title} 》\r\n已於 \r\n由本館管理員取消。\r\n取消原因： OOXX ，若您仍有借閱需求，歡迎重新進行預約。\r\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。";
-            //await EmailSenders.SendAsync(email, subject, body);
+            var user = await _context.Reservations.Include(x => x.CIdNavigation).Include(x => x.Collection).Where(x => x.CIdNavigation.CId == NotificationUser).Select(result => new ReturnDTO
+            {
+                cName = result.CIdNavigation.CName,
+                cAccount = result.CIdNavigation.CAccount,
+                title = result.Collection.Title
+            }).ToListAsync();
+            string email = "ns45665412@gmail.com";
+            string subject = "【取消預約通知】";
+            string body = $"親愛的{user[0].cName}您好，您於\r\n所預約的書籍《 {user[0].title} 》\r\n已於 {DateTime.Now} \r\n由本館管理員取消。\r\n取消原因： 功課沒寫 。若您仍有借閱需求，歡迎重新進行預約。\r\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。";
+            await EmailSenders.SendAsync(email, subject, body);
             return Json(1);
         }
 
