@@ -25,8 +25,8 @@ namespace test2.Models.ManagementModels.Services
             List<NotificationUserDTO> users = await _context.Borrows
                 .Include(x => x.CIdNavigation).Include(x => x.Book).ThenInclude(x => x.Collection)
                 .Where(x => x.BorrowStatusId == 2 && 
-                x.DueDateB.Date == DateTime.Today.AddDays(-1) ||
-                x.DueDateB.Date == DateTime.Today.AddDays(-3)
+                x.DueDateB.Date == DateTime.Today.AddDays(1) ||
+                x.DueDateB.Date == DateTime.Today.AddDays(3)
                 )
                 .Select(result => new NotificationUserDTO()
                 {
@@ -56,29 +56,16 @@ namespace test2.Models.ManagementModels.Services
                 Value = dt
             };
 
-            // 站內通知
+            // 站內通知 + Email
             await _context.Set<MessageDTO>().FromSqlRaw($"EXEC NotificationAboutToExpireToEmail @users", param).ToListAsync();
             foreach (var user in users)
             {
                 Debug.WriteLine($"借閱者: {user.cName} _ 書籍 {user.Title} _ 歸還日期: {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} _ 信箱: {user.Email}");
+                //string subject = "林間書語【即將逾期通知】";
+                //string body = $"親愛的 {user.cName}，您所借閱的  {user.Title} \r\n 將於 {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} 逾期，距離還書期限僅剩 {user.Days} 天。\r\n圖書館管理系統 敬上。";
+                //await EmailSenders.SendAsync(user.Email!, subject, body);
+
             }
-            //string myEmail = "ns45665412@gmail.com";
-            // Email通知
-            //foreach (var user in users)
-            //{
-            //    string subject = "林間書語【即將逾期通知】";
-            //    string body = $"親愛的 {user.cName}，您所借閱的  {user.Title} \r\n 將於 {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} 逾期，距離還書期限僅剩 {user.Days} 天。\r\n圖書館管理系統 敬上。";
-            //    await EmailSenders.SendAsync(myEmail, subject, body);
-            //}
-
-            // 以下可以測試用OK
-            //string subject = "【即將逾期通知】";
-            //string body = $"親愛的 {users[0].ClientName} ，您所借閱的  {users[0].Title} \r\n 將於 {users[0].DueDays} 逾期，距離還書期限僅剩 {users[0].Days} 天。\r\n圖書館管理系統 敬上。";
-            //int UserCount = users.Count();
-            //Debug.WriteLine("愈期有幾位: " + UserCount);
-            //string myEmail = "你的測試email";
-            //await EmailSenders.SendAsync(myEmail, subject, body);
-
             return new MessageDTO() { Message = "即將逾期檢查結束!" };
         }
     }

@@ -43,7 +43,7 @@ namespace test2.Models.ManagementModels.ZhongXian.BookQuery
                 await _context.SaveChangesAsync();
                 return new MessageDTO() { ResultCode = 1, Message = "成功修改書籍" };
             }
-            catch (Exception ex) { Debug.WriteLine("錯誤: " + ex); return new MessageDTO() { ResultCode = 0, Message = "發生錯誤" }; }
+            catch (Exception ex) { Debug.WriteLine("錯誤: " + ex); return new MessageDTO() { ResultCode = 0, Message = "ISBM無法重複" }; }
 
         }
     }

@@ -33,13 +33,13 @@ namespace test2.Models.ManagementModels.ZhongXian.Appoimtment
                 title = bookId?[0].Title,
             };
             //Email發送
-            //if (result.ResultCode == 1)
-            //{
-            //    string subject = "【預約成功通知】";
-            //    string body = $"親愛的 {User[0].CName}，您已於 {DateTime.Now} \r\n預約了《{bookId[0].Title}》請耐心等候通知。\r\n圖書館管理系統 敬上。";
-            //    string email = "ns45665412@gmail.com";
-            //    await EmailSenders.SendAsync(email, subject, body);
-            //}
+            if (result.ResultCode == 1)
+            {
+                //string subject = "【預約成功通知】";
+                //string body = $"親愛的 {User![0].CName}，您已於 {DateTime.Now.Date.ToString("yyyy-MM-dd")} \r\n預約了《{bookId![0].Title}》請耐心等候通知。\r\n圖書館管理系統 敬上。";
+                //string email = "ns45665412@gmail.com";
+                //await EmailSenders.SendAsync(email, subject, body);
+            }
             return result;
         }
     }

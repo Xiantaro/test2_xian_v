@@ -43,9 +43,12 @@ function AppointmentNotificationClose() {
 let booktitle;
 let appointmentDate;
 
+const formatDateISO = (date) => {
+    return date.toLocaleDateString('en-CA');  
+};
 // 重新選擇
 function CancelNotificationChange() {
-    let cancelAppointmentText = `【取消預約通知】\n親愛的用戶您好，\n您所預約的書籍《 ${booktitle} 》\n已於 ${new Date().toLocaleString('zh-TW')} 由本館管理員取消。\n取消原因： 考零分 。若您仍有借閱需求，歡迎重新進行預約。\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。`
+    let cancelAppointmentText = `【取消預約通知】\n親愛的用戶您好，\n您所預約的書籍《 ${booktitle} 》\n已於 ${formatDateISO(new Date()) } 由本館管理員取消。\n取消原因： 考零分 。若您仍有借閱需求，歡迎重新進行預約。\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。`
     $("#NotificationTextarea").val(cancelAppointmentText);
 }
 
@@ -68,13 +71,21 @@ function SendCancelAppointmentBtn() {
         url: "/Backend/Manage/CancelAppointment",
         data: CancelForm,
         success: (result) => {
-            if (result == 0) { alert("取消預約失敗...."); }
-            if (result == 1) { alert("取消預約成功!!!!"); }
+            if (result == 0) {
+                $('#notificationModal').modal("hide");
+                swal("系統提示", "取消預約失敗", "error");
+                return;
+            }
+            if (result == 1) {
+                $('#notificationModal').modal("hide");
+                swal("系統提示", "取消預約成功", "success");
+                setTimeout(() => Appointment_queryEvent(), 1000)
+                Appointment_queryEvent();
+            }
         }
     })
-    $('#notificationModal').modal("hide");
-    setTimeout(() => Appointment_queryEvent(), 1000)
-    Appointment_queryEvent();
+    
+    
 }
 
 // #endregion 預約查詢Module "END""
@@ -141,9 +152,9 @@ function BorrowModeModeBookDynamic() {
 function BorrowModeSend() {
     let userId = $("#borrwoMode_UserID").val();
     let bookId = $("#borrwoMode_BookCode").val();
-    if (userId === "" && bookId === "") { alert("請輸入借閱者ID和書籍編號"); return; }
-    if (userId === "") { alert("請輸入借閱者ID!!"); return; }
-    if (bookId === "") { alert("請輸入書籍編號!!"); return; }
+    if (userId === "" && bookId === "") { swal("系統提示","請輸入借閱者ID和書籍編號", "error"); return; }
+    if (userId === "") { ("系統提示","請輸入借閱者編號","error"); return; }
+    if (bookId === "") { swal("系統提示", "請輸入書籍編號", "error"); return; }
     let formData = $("#borrwoModeForm").serialize();
     let btnValue = $(this).val();
     if (btnValue === "borrow") {
@@ -175,7 +186,7 @@ function ReturnBookMode() {
 // 還書送出
 function ReturnBookSend() {
     let bookId = $("#ReturnBookCode").val();
-    if (bookId === "") { alert("請輸入書籍編號!!"); return; }
+    if (bookId === "") { swal("系統提示", "請輸入書籍編號", "error"); return; }
     let data = $("#ReturnBookIdForm").serialize();
     $.post("/Backend/Manage/ReturnBookSend", data, (result) => {
         //if (result.ResultCode === 4) { $("#ReturnBookContent").html(retrunFalse); return; }
@@ -203,7 +214,7 @@ function AppointmentModeBookDynamic() {
     let page = $(this).data("page") || 1;
     let obj = { keyWord: keyWord, state: state, pageCount: pageCount, page: page }
     if (keyWord === " ") {
-        alert("請不要輸入空字串");
+        swal("系統提示", "請不要輸入空字串", "error");
         $("#appointmentMode_KeyWord").val("");
         return
     }
@@ -232,9 +243,9 @@ function appointmentOnChange() {
 function AppointmentModeSend() {
     let userId = $("#appointmentMode_UserID").val();
     let BookId = $("#appointmentMode_BookNumber").val();
-    if (userId === "" && BookId === "") { alert("請輸入借閱者ID和書籍編號"); return; }
-    if (userId === "") { alert("請輸入借閱者ID!!"); return; }
-    if (BookId === "") { alert("請輸入書籍編號!!"); return; }
+    if (userId === "" && BookId === "") { swal("系統提示", "請輸入借閱者ID和書籍編號", "error"); return; }
+    if (userId === "") { swal("系統提示", "請輸入借閱者", "error"); return; }
+    if (BookId === "") { swal("系統提示", "請輸入書籍編號", "error"); return; }
     let formData = $("#appointmentModeForm").serialize();
     $.post("/Backend/Manage/AppointmentMode1Send", formData, (result) => {
         $("#appointmentSuccessContent").html(result);
@@ -293,11 +304,12 @@ function BooksAdded_BtnSend() {
         form.classList.add("was-validated"); 
         return; 
     }
-    if ($("#BooksAdded_ISBM").val().length < 13) { alert("請輸入正確的13碼 ISBM"); $("#BooksAdded_ISBM").val(""); return; }
-    if ($(".booktitle").val().length > 100) { alert("書籍名稱字數超過上限請重新輸入!"); $(".booktitle").val("");return;}
-    if ($(".authorName").val().length > 50) { alert("作者字數超過上限請重新輸入!");$(".authorName").val("");return;}
-    if ($(".translator").val().length > 50) { alert("譯者字數超過上限請重新輸入!"); $(".translator").val(""); return; }
-    if ($(".pushier").val().length > 50) { alert("出版社字數超過上限請重新輸入!"); $(".pushier").val(""); return; }
+    swal("出版社字數超過上限請重新輸入!", "error");
+    if ($("#BooksAdded_ISBM").val().length < 13) { swal("系統提示", "請輸入正確的13碼ISBM", "error"); $("#BooksAdded_ISBM").val(""); return; }
+    if ($(".booktitle").val().length > 100) { swal("系統提示", "書籍名稱字數超過上限請重新輸入!", "error"); $(".booktitle").val("");return;}
+    if ($(".authorName").val().length > 50) { swal("系統提示", "作者字數超過上限請重新輸入!", "error"); $(".authorName").val("");return;}
+    if ($(".translator").val().length > 50) { swal("系統提示", "譯者字數超過上限請重新輸入!", "error"); $(".translator").val(""); return; }
+    if ($(".pushier").val().length > 50) { swal("系統提示", "出版社字數超過上限請重新輸入!", "error"); $(".pushier").val(""); return; }
     var formdata = new FormData($("#BooksAdded_FormData")[0]);
     $.ajax({
         url: "/Backend/Manage/BooksCreate",
@@ -307,11 +319,11 @@ function BooksAdded_BtnSend() {
         contentType: false,
         success: (result) => {
             if (result.ResultCode === 1) {
-                alert(result.Message);
+                swal("系統提示", result.Message, "success");
                 BooksAdded_Reset();
                 $("#BooksAdded_FormData").removeClass("was-validated");
             }
-            else { alert(result.Message) }
+            else {swal("系統提示", result.Message, "error");}
         }
     });
 };
@@ -448,11 +460,12 @@ function BookStoredBtn(xian) {
     let newbookDesc = thisRow.find(".bookDesc textarea").val();
     let newBookImg = thisRow.find(".BookAdd_Display").prop("src");
 
-    if (newbookISBM.length < 13) { alert("請輸入正確的13碼 ISBM"); thisRow.find(".bookISBM input").val(""); return; }
-    if (newbookTitle.length > 100) { alert("書籍名稱字數超過上限請重新輸入!"); thisRow.find(".bookTitle input").val(""); return; }
-    if (newbookAuthor.length > 50) { alert("作者字數超過上限請重新輸入!"); thisRow.find(".bookAuthor input").val(""); return; }
-    if (newbookTranslator.length > 50) { alert("譯者字數超過上限請重新輸入!"); thisRow.find(".bookTranslator input").val(""); return; }
-    if (newbookPublisher.length > 50) { alert("出版社字數超過上限請重新輸入!"); thisRow.find(".bookPublisher input").val(""); return; }
+    swal("系統提示", "出版社字數超過上限請重新輸入!", "error");
+    if (newbookISBM.length < 13) { swal("系統提示", "請輸入正確的13碼 ISBM", "error"); thisRow.find(".bookISBM input").val(""); return; }
+    if (newbookTitle.length > 100) { swal("系統提示", "書籍名稱字數超過上限請重新輸入!", "error"); thisRow.find(".bookTitle input").val(""); return; }
+    if (newbookAuthor.length > 50) { swal("系統提示", "作者字數超過上限請重新輸入!", "error"); thisRow.find(".bookAuthor input").val(""); return; }
+    if (newbookTranslator.length > 50) { swal("系統提示", "譯者字數超過上限請重新輸入!", "error"); thisRow.find(".bookTranslator input").val(""); return; }
+    if (newbookPublisher.length > 50) { swal("系統提示", "出版社字數超過上限請重新輸入!", "error"); thisRow.find(".bookPublisher input").val(""); return; }
     let data = {
         CollectionId: collectionId,
         Title: newbookTitle,
@@ -474,8 +487,9 @@ function BookStoredBtn(xian) {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: (result) => {
-            if (result.ResultCode === 0) { alert(result.Message); return; }
-            alert(result.Message);
+            swal("系統提示", result.Message, "error");
+            if (result.ResultCode === 0) { swal("系統提示", result.Message, "error"); return; }
+            swal("系統提示", result.Message, "success");
             thisRow.find(".bookISBM").html(newbookISBM);
             thisRow.find(".bookTitle").html(newbookTitle);
             thisRow.find(".bookAuthor").html(newbookAuthor);
@@ -494,7 +508,7 @@ function BookStoredBtn(xian) {
             thisRow.find(".bookImg").data("collapse-enabled", true);
         },
         Error: (err) => {
-            alert("錯誤:" + err)
+            swal("發生錯誤", err, "error");
         }
     })
 }
@@ -554,7 +568,9 @@ function DisplayBookCode(xian) {
                 $(".bookLock").on("click", BookQueryUnLock);
                 $(".bookUnlock").on("click", BookQUeryLock);
             },
-            error: (err) => {alert("錯誤: " + err);}
+            error: (err) => {
+                swal("發生錯誤", err, "error");
+            }
         });
     }
     const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseId[0]);
@@ -642,8 +658,10 @@ function BookQueryCheckAddsBookcode(xian) {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: (result) => {
-            if (result.ResultCode === 0) { alert(result.Message); return; }
-            alert(result.Message);
+            if (result.ResultCode === 0) {
+                swal("系統提示", result.Message, "error");
+            }
+            swal("系統提示", result.Message, "success");
             if (data.BookStatusId === 1) {
                 //thisRow.find(".bookStatus").addClass("bg-success")
                 thisRow.find(".bookStatus").attr("style", "background-color: var(--c-brown3-100)");
@@ -657,7 +675,9 @@ function BookQueryCheckAddsBookcode(xian) {
             thisRow.find(".bookcodeId").html(BookCode);
             thisRow.find(".bookBtn").html(`<button type="button" class="btn btn-primary btn-lg fw-bold fs-3 bookCodeEdit mx-2" onclick="BookQueryEditBookCode(this)">修改</button><button type="button" class="btn btn-lg fw-bold fs-3 bookCodeDelete bookCodelock text-white disabled" onclick="BookQueryQueryDeleteBookCode(event, this)"  style="background-color: rgba(166, 30, 53, 1)">刪除</button>`);
         },
-        error: (err) => { alert("錯誤:" + err); return; }
+        error: (err) => {
+            swal("發生錯誤", err, "error");
+        }
     });
 }
 //  取消 BookCode
@@ -707,8 +727,10 @@ function BookQueryCheckChangeStatus(xian) {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: (result) => {
-            if (result.ResultCode === 0) { alert(result.Message); return; }
-            alert(result.Message);
+            if (result.ResultCode === 0) {
+                swal("系統提示", result.Message, "error");
+            }
+            swal("系統提示", result.Message, "success");
             if (bookCodeStatus === "1") {
                 thisRow.find(".bookStatus").attr("style", "background-color: var(--c-brown3-100)");
                 thisRow.find(".bookStatus").html("館內")
@@ -721,7 +743,7 @@ function BookQueryCheckChangeStatus(xian) {
             thisRow.find(".bookBtn").html(`<button type="button" class="btn btn-primary btn-lg fw-bold fs-3 bookCodeEdit mx-2" onclick="BookQueryEditBookCode(this)">修改</button><button type="button" class="btn btn-lg fw-bold fs-3 bookCodeDelete bookCodelock text-white disabled" onclick="BookQueryQueryDeleteBookCode(event, this)" style="background-color: rgba(166, 30, 53, 1)">刪除</button>`);
         },
         error: (err) => {
-            alert("錯誤: " + err)
+            swal("發生錯誤", err, "error");
         }
     })
 }
@@ -751,8 +773,11 @@ function BookQueryQueryDeleteBookCode(xian) {
         url: "/Backend/Manage/BookQueryDeleteBookCode",
         data: { bookCodeid: bookCodeid },
         success: (result) => {
-            if (result.ResultCode === 0) { alert(result.Message); return}
-            alert(result.Message);
+            if (result.ResultCode === 0) {
+                swal("系統提示", result.Message, "error");
+                return;
+            }
+            swal("系統提示", result.Message, "info");
             $(xian.target).closest("tr[data-colleciton-Id]").remove();
         },
     })
@@ -804,7 +829,7 @@ function NotificationBtn() {
 // 預設通知內容
 function ChageNotificationType() {
     let NotificationType = $("#NotificationType").val();
-    let UpcomingExpirationNoticeText = `親愛的用戶您好，\n您所借閱的書籍《${TempBookName}》\n即將於  ${DueDate}  到期 \n 請您於期限前歸還，謝謝。\n圖書館管理系統 敬上。`;
+    let UpcomingExpirationNoticeText = `親愛的用戶您好，\n您所借閱的書籍《${TempBookName}》\n即將於  ${DueDate.replaceAll('/', '-')}  到期 \n 請您於期限前歸還，謝謝。\n圖書館管理系統 敬上。`;
     let ExpirationNoticeWarningText = `親愛的用戶您好，\n您所借閱的書籍《${TempBookName}》已逾期\n請儘速歸還並聯繫館方補辦相關事宜，謝謝您的配合。\n圖書館管理系統 敬上。`;
     if (NotificationType === "即將到期通知") { $("#NotificationTextarea").val(UpcomingExpirationNoticeText); }
     if (NotificationType === "逾期警告通知") { $("#NotificationTextarea").val(ExpirationNoticeWarningText); }
@@ -814,9 +839,15 @@ function ChageNotificationType() {
 function NotificationMessageSend() {
     let myform = $("#NotificationFom").serialize();
     $.post("/Backend/Manage/Notification", myform, (result) => {
-        if (result === 1) { alert("成功送出!!"); }
-        else if (result === 0) { alert("送出失敗...."); }
-        else { alert(result); }
+        if (result === 1) {
+            swal("系統提示", "成功送出!!", "success");
+        }
+        else if (result === 0) {
+            swal("系統提示", "送出失敗....", "error");
+        }
+        else {
+            swal("系統提示", result, "info");
+        }
         NotificationClose();
     })
 };
@@ -910,7 +941,7 @@ function BookType(row, type) {
             $(row).find(".bookType").html(result);
         },
         Error: (err) => {
-            alert("錯誤: " + err)
+            swal("發生錯誤", err, "error");
         }
     })
 }
@@ -923,7 +954,7 @@ function BookLanguage(row, language) {
         success: (result) => {
             $(row).find(".bookLang").html(result);
         },
-        Error: (err) => { alert("錯誤: " + err) }
+        Error: (err) => { swal("發生錯誤", err, "error"); }
     })
 }
 // 時區

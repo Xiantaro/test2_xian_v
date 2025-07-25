@@ -30,12 +30,12 @@ namespace test2.Models.ManagementModels.ZhongXian.ReturnBook
             // 取得下一位預約者資訊並發站內通知、更新狀態
             var nextReservation = await context.Set<ReturnBookDTO>().FromSqlInterpolated($"EXEC CheckBookIsReservation {resultMessage[0].collectionid}, {resultMessage[0].bookid}").ToListAsync();
             //Email發送 下一位預約者Emal =>  cName、cAccount、title
-            if (nextReservation.Count != 0)
+            if (!nextReservation[0].cName.IsNullOrEmpty())
             {
-                string myEmail = "ns45665412@gmail.com";
-                string subject = "【取書通知】";
-                string body = $"親愛的 {nextReservation[0].cName} \r\n您所預約的書籍 【{nextReservation[0].title}】 已可以借閱\r\n請於 {DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")}前到本館借書。\r\n圖書館管理系統 敬上。";
-                await EmailSenders.SendAsync(myEmail, subject, body);
+                //string myEmail = "ns45665412@gmail.com";
+                //string subject = "【取書通知】";
+                //string body = $"親愛的 {nextReservation[0].cName} \r\n您所預約的書籍 【{nextReservation[0].title}】 已可以借閱\r\n請於 {DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")}前到本館借書。\r\n圖書館管理系統 敬上。";
+                //await EmailSenders.SendAsync(myEmail, subject, body);
             }
             return resultViewModel;
         }

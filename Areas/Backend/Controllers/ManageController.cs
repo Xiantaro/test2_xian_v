@@ -76,10 +76,10 @@ namespace test2.Areas.Backend.Controllers
                 cAccount = result.CIdNavigation.CAccount,
                 title = result.Collection.Title
             }).ToListAsync();
-            string email = "ns45665412@gmail.com";
-            string subject = "【取消預約通知】";
-            string body = $"親愛的{user[0].cName}您好，您所預約的書籍《 {user[0].title} 》\r\n已於 {DateTime.Now} \r\n由本館管理員取消。\r\n取消原因： 考零分 。若您仍有借閱需求，歡迎重新進行預約。\r\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。";
-            await EmailSenders.SendAsync(email, subject, body);
+            //string email = "ns45665412@gmail.com";
+            //string subject = "【取消預約通知】";
+            //string body = $"親愛的{user[0].cName}您好，您所預約的書籍《 {user[0].title} 》\r\n已於 {DateTime.Now.ToString("yyyy-MM-dd")} \r\n由本館管理員取消。\r\n取消原因： 考零分 。若您仍有借閱需求，歡迎重新進行預約。\r\n如有任何問題或需協助，敬請聯繫本館服務人員，我們將竭誠為您服務。感謝您的配合與理解！圖書館管理系統 敬上。";
+            //await EmailSenders.SendAsync(email, subject, body);
             return Json(1);
         }
 
@@ -313,7 +313,7 @@ namespace test2.Areas.Backend.Controllers
             }
             catch (Exception ex)
             {
-                return new MessageDTO() { Message = $"刪除失敗: {ex}" };
+                return new MessageDTO() { ResultCode = 0, Message = $"刪除失敗: {ex}" };
             }
         }
         #endregion
@@ -335,7 +335,7 @@ namespace test2.Areas.Backend.Controllers
             await _context.SaveChangesAsync();
 
             // Email通知 
-            string subject = NotificationType;
+            string subject = "【"+NotificationType+"】";
             string body = NotificationTextarea;
             string email = "ns45665412@gmail.com";
             await EmailSenders.SendAsync(email, subject, body);

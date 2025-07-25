@@ -14,7 +14,6 @@ namespace test2.Models.ManagementModels.Services
             _context = context;
         }
         EmailSender EmailSenders = new EmailSender();
-        string myEmail = "ns45665412@gmail.com";
         public async Task<MessageDTO> LateRetrunStart()
         {
             Debug.WriteLine("開始進行逾期還書檢查.....");
@@ -26,21 +25,10 @@ namespace test2.Models.ManagementModels.Services
             foreach (var x in LateReturnList)
             {
                 Debug.WriteLine($"逾期還書者:{x.cName} _ 書名: {x.title} _ 信箱 : {x.cAccount}");
+                //string subject = "【逾期警告通知】";
+                //string body = $"親愛的 {x.cName}，您所借閱的  {x.title} \r\n已經逾期，請盡速還書。\r\n圖書館管理系統 敬上。";
+                //await EmailSenders.SendAsync(x.cAccount!, subject, body);
             }
-            //// Email發送
-            //foreach (var user in LateReturnList)
-            //{
-            //    string subject = "【逾期警告通知】";
-            //    string body = $"親愛的 {user.cName}，您所借閱的  {user.Title} \r\n已經愈期，請盡速還書。\r\n圖書館管理系統 敬上。";
-            //    await EmailSenders.SendAsync(user.cAccount!, subject, body);
-            //}
-
-            // 以下可以測試用
-            //string subject = "【逾期警告通知】";
-            //string body = $"親愛的 {users[0].ClientName}，您所借閱的  {users[0].Title} \r\n已經愈期，請盡速還書。\r\n圖書館管理系統 敬上。";
-            //int UserCount = users.Count();
-            //string myEmail = "你的Email";
-            //await EmailSenders.SendAsync(myEmail, subject, body);
 
             return new MessageDTO() { Message = "逾期未還檢查結束!" };
         }
