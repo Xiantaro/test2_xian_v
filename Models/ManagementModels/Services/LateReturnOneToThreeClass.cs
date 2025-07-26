@@ -61,9 +61,12 @@ namespace test2.Models.ManagementModels.Services
             foreach (var user in users)
             {
                 Debug.WriteLine($"借閱者: {user.cName} _ 書籍 {user.Title} _ 歸還日期: {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} _ 信箱: {user.Email}");
-                //string subject = "林間書語【即將逾期通知】";
+                //if (user.cName == "兩津勘吉" || user.cName == "葉大雄")
+                //{
+                //string subject = "【即將逾期通知】";
                 //string body = $"親愛的 {user.cName}，您所借閱的  {user.Title} \r\n 將於 {user.DueDays!.Value.Date.ToString("yyyy-MM-dd")} 逾期，距離還書期限僅剩 {user.Days} 天。\r\n圖書館管理系統 敬上。";
-                //await EmailSenders.SendAsync(user.Email!, subject, body);
+                //await EmailSenders.SendAsync("ns45665412@gmail.com", subject, body);
+                //}
 
             }
             return new MessageDTO() { Message = "即將逾期檢查結束!" };

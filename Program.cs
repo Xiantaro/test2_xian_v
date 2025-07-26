@@ -73,7 +73,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 builder.Services.AddDistributedMemoryCache();
 
 //主要逾期預約排程
-//builder.Services.AddHostedService<ScheduleServices>();
+builder.Services.AddHostedService<ScheduleServices>();
 
 //session service
 builder.Services.AddSession(options =>

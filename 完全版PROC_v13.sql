@@ -526,9 +526,9 @@ BEGIN
 		INSERT INTO Notification (cid, message, notificationDate )
 		SELECT
 				od.cid,
-				N'【預約取消通知】親愛的 ' + cli.cName +
+				N'【取書逾期通知】親愛的 ' + cli.cName +
                        N' ，您所預約的 【' + col.title + 
-                       N'】 未於 ' + CONVERT(NVARCHAR, FORMAT(DATEADD(DAY, -1, GETDATE()), 'yyyy-MM-dd'), 111) +' 前取書，系統已取消，如有需要請重新預約，謝謝!!',
+                       N'】 未於 ' + CONVERT(NVARCHAR, FORMAT(DATEADD(DAY, -1, GETDATE()), 'yyyy-MM-dd'), 111) +' 前取書，系統已取消，如有需要請重新預約，謝謝。圖書館管理系統 敬上。',
 				GETDATE()
 		FROM @OverDue od
 		JOIN Client cli ON od.cid = cli.cid 
