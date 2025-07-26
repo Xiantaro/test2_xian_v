@@ -17,7 +17,6 @@ namespace test2.Models.ManagementModels.Services
         public async Task<MessageDTO> LateRetrunStart()
         {
             Debug.WriteLine("開始進行逾期還書檢查.....");
-            // ***非必要請不要啟動****
             // 檢查逾期、更改並站內通知
             var LateReturnList = await _context.Set<ReturnDTO>().FromSqlRaw($"EXEC LateReturn2Email").ToListAsync();
             if (LateReturnList[0].ResultCode == 0) { return new MessageDTO() { Message = "今天無逾期未還" }; }

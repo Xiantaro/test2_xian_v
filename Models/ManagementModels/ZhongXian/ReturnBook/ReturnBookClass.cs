@@ -32,10 +32,9 @@ namespace test2.Models.ManagementModels.ZhongXian.ReturnBook
             //Email發送 下一位預約者Emal =>  cName、cAccount、title
             if (!nextReservation[0].cName.IsNullOrEmpty())
             {
-                //string myEmail = "ns45665412@gmail.com";
                 //string subject = "【取書通知】";
                 //string body = $"親愛的 {nextReservation[0].cName} \r\n您所預約的書籍 【{nextReservation[0].title}】 已可以借閱\r\n請於 {DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")}前到本館借書。\r\n圖書館管理系統 敬上。";
-                //await EmailSenders.SendAsync(myEmail, subject, body);
+                //await EmailSenders.SendAsync(nextReservation[0].cAccount!, subject, body);
             }
             return resultViewModel;
         }

@@ -23,24 +23,22 @@ namespace test2.Models.ManagementModels.Services
                 Debug.WriteLine("排程開始!");
                 using var scope = _scopeFacotry.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<Test2Context>();
-                // 需要再啟用++++++++++++++++++++++++++++
+
                 // 取書逾期 
-                // 通知其他預約者、沒有預約者 XX
+                // 通知其他預約者、沒有預約者 
                 OverdueClass OverdueClasss = new OverdueClass(context);
                 MessageDTO overDueResult = await OverdueClasss.OverdueStart();
                 Debug.WriteLine(overDueResult.Message);
 
-                // 需要再啟用++++++++++++++++++++++++++++
-                // 借閱逾期 更改狀態、Email+站內通知 OKKKKKKKKKKKKKKKK
-                //LateRetrunClass LateRetrunClasss = new LateRetrunClass(context);
-                //var LateReturnResult = await LateRetrunClasss.LateRetrunStart();
-                //Debug.WriteLine(LateReturnResult);
+                // 借閱逾期 更改狀態、Email+站內通知 
+                LateRetrunClass LateRetrunClasss = new LateRetrunClass(context);
+                var LateReturnResult = await LateRetrunClasss.LateRetrunStart();
+                Debug.WriteLine(LateReturnResult);
 
-                // 需要再啟用++++++++++++++++++++++++++++
-                //即將逾期前一天、前三天 Email+站內通知 OKKKKKKKK
-                //LateReturnOneToThreeClass LateReturnBefore = new LateReturnOneToThreeClass(context);
-                //var LateReturn2 = await LateReturnBefore.LateReturnStartOnToThree();
-                //Debug.WriteLine(LateReturn2);
+                //即將逾期前一天、前三天 Email+站內通知 
+                LateReturnOneToThreeClass LateReturnBefore = new LateReturnOneToThreeClass(context);
+                var LateReturn2 = await LateReturnBefore.LateReturnStartOnToThree();
+                Debug.WriteLine(LateReturn2);
 
                 Debug.WriteLine("排程結束.........");
             }
